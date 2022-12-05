@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-FoodStore2Application<food_store2>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.store.FoodStore2Application",
+            "projectName": "food_store2",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

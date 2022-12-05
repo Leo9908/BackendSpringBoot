@@ -12,7 +12,7 @@ import com.store.entitys.User;
 //DTO permite un acceso mas seguro de los datos, por eso lo estoy usando para la entidad User
 @Repository
 public interface UsersRepository extends JpaRepository<User, Long> {
-	public List<User> findByEmail(String email);
+	public User findByEmail(String email);
 
 	public Optional<User> findByUserOrEmail(String username, String emial);
 
@@ -21,4 +21,6 @@ public interface UsersRepository extends JpaRepository<User, Long> {
 	public Boolean existsByUser(String username);
 
 	public Boolean existsByEmail(String email);
+
+	public Optional<User> findByToken_Password(String token);
 }

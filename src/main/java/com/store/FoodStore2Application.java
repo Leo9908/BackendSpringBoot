@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Bean;
 public class FoodStore2Application {
 
 	@Bean
-	public ModelMapper modelMapper() {
+	ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(FoodStore2Application.class, args);
 	}

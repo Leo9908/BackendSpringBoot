@@ -1,8 +1,9 @@
 package com.store.controller;
 
-import java.util.Collections;
+import java.security.Principal;
 
-import org.modelmapper.ModelMapper;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,12 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.store.dto.LoginDTO;
 import com.store.dto.UserDTO;
-import com.store.entitys.Rol;
-import com.store.entitys.User;
-import com.store.repository.RolRepository;
-import com.store.repository.UsersRepository;
 import com.store.security.JWTAuthResonseDTO;
 import com.store.security.JwtTokenProvider;
+import com.store.service.UserService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -33,22 +32,21 @@ public class AuthController {
 	private AuthenticationManager manager;
 
 	@Autowired
-	private UsersRepository repository;
-
-	@Autowired
-	private RolRepository repository2;
+	private UserService serviceUser;
 
 	@Autowired
 	private PasswordEncoder encoder;
 
 	@Autowired
-	private ModelMapper mapper;
-
-	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
+	@GetMapping("/current-user")
+	public UserDTO getCurrentUser(Principal principal) {
+		return serviceUser.findByUser(principal.getName());
+	}
+	
 	@PostMapping("/login")
-	public ResponseEntity<JWTAuthResonseDTO> authenticateUser(@RequestBody LoginDTO loginDTO) {
+	public ResponseEntity<JWTAuthResonseDTO> authenticateUser(@Valid @RequestBody LoginDTO loginDTO) {
 		Authentication authentication = manager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginDTO.getUsernameOrEmail(), loginDTO.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -59,19 +57,17 @@ public class AuthController {
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<?> userRegistered(@RequestBody UserDTO userDTO) {
-		if (repository.existsByUser(userDTO.getUser())) {
+	public ResponseEntity<?> registerUser(@Valid @RequestBody UserDTO userDTO) {
+		if (serviceUser.existsByUser(userDTO.getUser())) {
 			return new ResponseEntity<>("User already exists", HttpStatus.BAD_REQUEST);
 		}
-		if (repository.existsByUser(userDTO.getEmail())) {
+		if (serviceUser.existsByEmail(userDTO.getEmail())) {
 			return new ResponseEntity<>("Email already exists", HttpStatus.BAD_REQUEST);
 		}
-		User user = mapper.map(userDTO, User.class);
-		user.setPass(encoder.encode(userDTO.getPass()));
 
-		Rol rol = repository2.findByName("ROLE_ADMIN").get();
-		user.setRoles(Collections.singleton(rol));
-		repository.save(user);
+		userDTO.setPass(encoder.encode(userDTO.getPass()));
+
+		serviceUser.createUser(userDTO);
 
 		return new ResponseEntity<>("Successfully registered user", HttpStatus.OK);
 	}

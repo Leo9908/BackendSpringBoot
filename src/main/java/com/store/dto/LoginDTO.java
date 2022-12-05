@@ -1,8 +1,13 @@
 package com.store.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 public class LoginDTO {
 
+	@NotEmpty
 	private String usernameOrEmail;
+	@Size(min = 8, message = "Password must contain more than eight characters")
 	private String password;
 
 	public String getUsernameOrEmail() {

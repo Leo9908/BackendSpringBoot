@@ -1,8 +1,12 @@
 package com.store.dto;
 
+import java.util.Collection;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
+import com.store.entitys.Rol;
 
 public class UserDTO {
 
@@ -13,15 +17,19 @@ public class UserDTO {
 	@NotEmpty(message = "The last name must not be empty")
 	@Size(min = 5, message = "Last name must contain more than five characters")
 	private String last_name;
-	@NotEmpty(message = "The username must not be empty")
 	@Size(min = 2, message = "User name must contain more than two characters")
 	private String user;
 	@NotEmpty(message = "The last name must not be empty")
 	@Email
 	private String email;
-	@NotEmpty(message = "The password must not be empty")
 	@Size(min = 8, message = "Password must contain more than eight characters")
 	private String pass;
+
+	private String token_pass;
+
+	private String phone;
+
+	private Collection<Rol> roles;
 
 	public Long getId() {
 		return id;
@@ -69,6 +77,30 @@ public class UserDTO {
 
 	public void setPass(String pass) {
 		this.pass = pass;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public Collection<Rol> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Collection<Rol> roles) {
+		this.roles = roles;
+	}
+
+	public String getToken_pass() {
+		return token_pass;
+	}
+
+	public void setToken_pass(String token_pass) {
+		this.token_pass = token_pass;
 	}
 
 	public UserDTO() {

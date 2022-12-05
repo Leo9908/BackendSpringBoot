@@ -105,4 +105,18 @@ public class Product {
 		this.ratings = ratings;
 	}
 
+	public Product(String name, int type, double precio, String description, String imgUrl, Boolean onSale,
+			Collection<ProductRating> ratings) {
+		this.name = name;
+		this.type = type;
+		this.precio = precio;
+		this.description = description;
+		this.imgUrl = imgUrl;
+		this.onSale = onSale;
+		this.ratings = ratings;
+	}
+
+	public Product() {
+	}
+
 }

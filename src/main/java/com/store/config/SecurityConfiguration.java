@@ -1,10 +1,13 @@
 package com.store.config;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -14,6 +17,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.store.security.CustomUserDetailsService;
 import com.store.security.JwtAuthenticationEntryPoint;
@@ -42,13 +48,24 @@ public class SecurityConfiguration {
 
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.csrf().disable().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and()
+		http.cors(Customizer.withDefaults()).csrf().disable().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-				.antMatchers(HttpMethod.GET, "/api/**").permitAll().antMatchers("/api/auth/**").permitAll().anyRequest()
+				.antMatchers("/api/**").permitAll().antMatchers("/api/auth/**").permitAll().anyRequest()
 				.authenticated();
 		http.addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
+		
 		return http.build();
+	}
+
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(Arrays.asList("https://localhost:9000"));
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE"));
+		configuration.setAllowedHeaders(List.of("Authorization"));
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
 	}
 
 	protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {

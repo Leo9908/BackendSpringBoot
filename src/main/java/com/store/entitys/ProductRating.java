@@ -17,16 +17,16 @@ public class ProductRating {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(name = "nameUser", nullable = false, length = 40)
-	private String nameUser;
-	@Column(name = "emailUser", nullable = false, length = 50)
-	private String emailUser;
 	@Column(name = "stars", nullable = false, length = 1)
-	private Double stars;
+	private int stars;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
 	public Long getId() {
 		return id;
@@ -36,27 +36,11 @@ public class ProductRating {
 		this.id = id;
 	}
 
-	public String getNameUser() {
-		return nameUser;
-	}
-
-	public void setNameUser(String nameUser) {
-		this.nameUser = nameUser;
-	}
-
-	public String getEmailUser() {
-		return emailUser;
-	}
-
-	public void setEmailUser(String emailUser) {
-		this.emailUser = emailUser;
-	}
-
-	public Double getStars() {
+	public int getStars() {
 		return stars;
 	}
 
-	public void setStars(Double stars) {
+	public void setStars(int stars) {
 		this.stars = stars;
 	}
 
@@ -66,6 +50,14 @@ public class ProductRating {
 
 	public void setProduct(Product product) {
 		this.product = product;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public ProductRating() {

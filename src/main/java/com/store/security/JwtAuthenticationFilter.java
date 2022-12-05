@@ -40,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 					userDetails, null, userDetails.getAuthorities());
 			authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-			// Establecemos el contexti
+			// Establecemos el contexto
 			SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 		}
 		filterChain.doFilter(request, response);
@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private String getJWTofHttpRequest(HttpServletRequest request) {
 		String bearerToken = request.getHeader("Authorization");
 		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
-			return bearerToken.substring(7, bearerToken.length());
+			return bearerToken.substring(6, bearerToken.length());
 		}
 		return null;
 	}

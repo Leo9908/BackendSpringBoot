@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.store.dto.ProductDTO;
+import com.store.dto.ProductRatingDTO;
 import com.store.service.ProductsService;
 import com.store.utils.ConstantsApp;
 
@@ -41,6 +43,21 @@ public class ProductController {
 			@RequestParam(value = "sortBy", defaultValue = ConstantsApp.PAGE_ORDER_BY_DEFAULT, required = false) String sortBy,
 			@RequestParam(value = "sortDir", defaultValue = ConstantsApp.PAGE_ORDER_DIR_DEFAULT, required = false) String sortDir) {
 		return service.getAllProducts(pageNum, pageSize, sortBy, sortDir);
+	}
+
+	@GetMapping("/search")
+	public List<ProductDTO> searchProducts(@Param("keyWord") String keyWord) {
+		return service.findAll(keyWord);
+	}
+
+	@GetMapping("/favorites/{userId}")
+	public List<ProductDTO> findFavorites(@PathVariable(name = "userId") Long userId) {
+		return service.findFavorites(userId);
+	}
+
+	@GetMapping("/most-sold")
+	public List<ProductDTO> findTheMostSold() {
+		return service.findTheMostSold();
 	}
 
 	@GetMapping("/{id}")
@@ -66,6 +83,23 @@ public class ProductController {
 	public ResponseEntity<Boolean> deleteProduct(@PathVariable(name = "id") Long id) {
 		service.deleteProduct(id);
 		return ResponseEntity.ok(true);
+	}
+
+	@GetMapping("/{productId}/ratings")
+	public Double getProductRating(@PathVariable(value = "productId") Long productId) {
+		return service.getRatingsByProductId(productId);
+	}
+
+	@PostMapping("/{userId}/{productId}/ratings")
+	public ResponseEntity<ProductRatingDTO> saveRating(@PathVariable(value = "userId") Long userId,
+			@PathVariable(value = "productId") Long productId, @Valid @RequestBody ProductRatingDTO ratingDTO) {
+		return new ResponseEntity<>(service.createRating(userId, productId, ratingDTO), HttpStatus.CREATED);
+	}
+
+	@GetMapping("/{productId}/{userId}/ratings")
+	public Boolean IsProductRatedByUser(@PathVariable(value = "userId", required = true) Long userId,
+			@PathVariable(value = "productId", required = true) Long productId) {
+		return service.IsProductEvaluatedByUser(userId, productId);
 	}
 
 }

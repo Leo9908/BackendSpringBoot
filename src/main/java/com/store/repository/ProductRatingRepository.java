@@ -10,5 +10,6 @@ import com.store.entitys.ProductRating;
 @Repository
 public interface ProductRatingRepository extends JpaRepository<ProductRating, Long> {
 	public List<ProductRating> findByProductId(Long id);
-	public List<ProductRating> findByEmailUserAndProductId(String email, Long id);
+
+	public List<ProductRating> findByUserIdAndProductId(Long userId, Long productId);
 }

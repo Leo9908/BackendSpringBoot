@@ -21,6 +21,8 @@ public class ProductDTO {
 	@NotNull
 	private Boolean onSale;
 
+	private Double rating;
+
 	public Long getId() {
 		return id;
 	}
@@ -75,6 +77,14 @@ public class ProductDTO {
 
 	public void setOnSale(Boolean onSale) {
 		this.onSale = onSale;
+	}
+
+	public Double getRating() {
+		return rating;
+	}
+
+	public void setRating(Double rating) {
+		this.rating = rating;
 	}
 
 	public ProductDTO() {

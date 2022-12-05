@@ -1,6 +1,8 @@
 package com.store.entitys;
 
 import java.util.Collection;
+import java.util.HashSet;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,9 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -35,10 +39,27 @@ public class User {
 	@Column(name = "password", nullable = false)
 	private String pass;
 
+	@Column(name = "token_password", nullable = true)
+	private String token_pass;
+
+	/**
+	 * Atributos opcionales
+	 */
+	@Column(name = "phone", nullable = true, length = 15)
+	private String phone;
+
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.REFRESH })
 	@JoinTable(name = "users_rols", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "rol_id", referencedColumnName = "id"))
 	@JsonManagedReference
 	private Collection<Rol> roles;
+
+	@JsonBackReference
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Collection<Address> addresses = new HashSet<>();
+
+	@JsonBackReference
+	@OneToMany(mappedBy = "user")
+	private Collection<Order> orders = new HashSet<>();
 
 	public Long getId() {
 		return id;
@@ -96,6 +117,30 @@ public class User {
 		this.roles = roles;
 	}
 
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public Collection<Address> getAddresses() {
+		return addresses;
+	}
+
+	public void setAddresses(Collection<Address> addresses) {
+		this.addresses = addresses;
+	}
+
+	public String getToken_pass() {
+		return token_pass;
+	}
+
+	public void setToken_pass(String token_pass) {
+		this.token_pass = token_pass;
+	}
+
 	public User(Long id, String name, String last_name, String user, String email, String pass, Collection<Rol> roles) {
 		super();
 		this.id = id;
@@ -125,5 +170,9 @@ public class User {
 	public User() {
 		super();
 	}
+
+    public User orElseThrow(Object object) {
+        return null;
+    }
 
 }
