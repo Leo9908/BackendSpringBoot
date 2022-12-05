@@ -39,8 +39,8 @@ public class User {
 	@Column(name = "password", nullable = false)
 	private String pass;
 
-	@Column(name = "token_password", nullable = true)
-	private String token_pass;
+	@Column(name = "token", nullable = true)
+	private String token;
 
 	/**
 	 * Atributos opcionales
@@ -134,11 +134,11 @@ public class User {
 	}
 
 	public String getToken_pass() {
-		return token_pass;
+		return token;
 	}
 
-	public void setToken_pass(String token_pass) {
-		this.token_pass = token_pass;
+	public void setToken_pass(String token) {
+		this.token = token;
 	}
 
 	public User(Long id, String name, String last_name, String user, String email, String pass, Collection<Rol> roles) {
@@ -171,8 +171,8 @@ public class User {
 		super();
 	}
 
-    public User orElseThrow(Object object) {
-        return null;
-    }
+	public User orElseThrow(Object object) {
+		return null;
+	}
 
 }

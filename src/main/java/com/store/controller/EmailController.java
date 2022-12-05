@@ -16,7 +16,7 @@ import com.store.dto.EmailValuesDTO;
 import com.store.service.EmailService;
 
 @RestController
-@RequestMapping("/api/email")
+@RequestMapping("/api/auth/email")
 public class EmailController {
 
     @Autowired
@@ -36,8 +36,8 @@ public class EmailController {
 
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDTO dto) {
-        if (dto.getPassword() != dto.getConfirmPassword()) {
-            return new ResponseEntity<>("Las contraseñas no cohinciden", HttpStatus.OK);
+        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
+            return new ResponseEntity<>("Las contraseñas no cohinciden", HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(service.changePassword(dto), HttpStatus.OK);
     }

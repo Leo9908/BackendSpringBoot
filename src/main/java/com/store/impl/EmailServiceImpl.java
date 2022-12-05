@@ -90,7 +90,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     public String changePassword(ChangePasswordDTO dto) {
-        Optional<User> userOptional = usersRepository.findByToken_Password(dto.getTokenPassword());
+        Optional<User> userOptional = usersRepository.findByToken(dto.getTokenPassword());
         User user = userOptional.get();
         String newPassword = encoder.encode(dto.getPassword());
         user.setPass(newPassword);

@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDTO findByTokenPassword(String token) {
-		User user = repo.findByToken_Password(token)
+		User user = repo.findByToken(token)
 				.orElseThrow(() -> new ResourceNotFoundException("User", "name", null));
 		return mapUserEntity(user);
 	}
