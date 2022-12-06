@@ -28,7 +28,7 @@ public class EmailController {
         return new ResponseEntity<>("Correo enviado", HttpStatus.OK);
     }
 
-    @PostMapping("/send-html")
+    @PostMapping("/send-email")
     public ResponseEntity<?> sendEmail_Template(@RequestBody EmailValuesDTO dto) {
         service.sendEmailTemplate(dto);
         return new ResponseEntity<>("Correo con plantilla enviado", HttpStatus.OK);

@@ -42,9 +42,7 @@ public class ProductServiceImpl implements ProductsService {
 	public ProductDTO createProduct(ProductDTO productDTO) {
 
 		Product product = this.mapProductEntity(productDTO);
-
 		Product newProduct = repo.save(product);
-
 		ProductDTO productResponse = this.mapProductDTO(newProduct);
 
 		return productResponse;
