@@ -58,6 +58,16 @@ public class ProductServiceImpl implements ProductsService {
 	}
 
 	@Override
+	public List<ProductDTO> getOnSaleProducts() {
+		return repo.findByOnSale(true).stream().map(prod -> mapProductDTO(prod)).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<ProductDTO> getNotDeletedProducts(){
+		return repo.findByDeleted(false).stream().map(prod-> mapProductDTO(prod)).collect(Collectors.toList());
+	}
+
+	@Override
 	public ProductDTO findById(Long id) {
 		Product product = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
 		return mapProductDTO(product);
@@ -98,7 +108,10 @@ public class ProductServiceImpl implements ProductsService {
 
 	@Override
 	public void deleteProduct(Long id) {
-		repo.deleteById(id);
+		Product product = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
+		product.setDeleted(true);
+		product.setOnSale(false);
+		repo.save(product);
 	}
 
 	/**

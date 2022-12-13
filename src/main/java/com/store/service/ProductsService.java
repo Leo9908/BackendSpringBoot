@@ -10,6 +10,10 @@ public interface ProductsService {
 
 	public List<ProductDTO> getAllProducts(int pageNum, int pageSize, String sortBy, String sortDir);
 
+	public List<ProductDTO> getOnSaleProducts();
+	
+	public List<ProductDTO> getNotDeletedProducts();
+
 	public ProductDTO findById(Long id);
 
 	public ProductDTO updateProduct(ProductDTO productDTO, Long id);

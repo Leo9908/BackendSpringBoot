@@ -28,12 +28,19 @@ public class Product {
 	private int type;
 	@Column(name = "precio", nullable = false, length = 5)
 	private double precio;
-	@Column(name = "description", nullable = false, length = 100)
+	@Column(name = "description", nullable = false, length = 130)
 	private String description;
 	@Column(name = "imgUrl", nullable = false)
 	private String imgUrl;
 	@Column(name = "onSale", nullable = false)
 	private Boolean onSale;
+
+	//Esta columna es para si el admin desea eliminar un producto
+	//Al tener referencia con la tabla orders da error al eliminar un producto
+	//Y si se elimina un producto se tendrán que eliminar todas las ordenes relacionadas
+	//y por las ordenes es que se saca el registro de ventas.
+	@Column(name = "deleted", nullable = true)
+	private Boolean deleted = false;
 
 	// orphanRemoval elimina todos los objetos que dependen de otro para existir
 	// cuando dicho objeto se eleimina
@@ -104,7 +111,13 @@ public class Product {
 	public void setRatings(Collection<ProductRating> ratings) {
 		this.ratings = ratings;
 	}
+	public Boolean getDeleted() {
+		return deleted;
+	}
 
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
 	public Product(String name, int type, double precio, String description, String imgUrl, Boolean onSale,
 			Collection<ProductRating> ratings) {
 		this.name = name;

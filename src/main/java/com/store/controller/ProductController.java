@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.store.dto.ProductDTO;
 import com.store.dto.ProductRatingDTO;
 import com.store.service.ProductsService;
@@ -43,6 +42,16 @@ public class ProductController {
 			@RequestParam(value = "sortBy", defaultValue = ConstantsApp.PAGE_ORDER_BY_DEFAULT, required = false) String sortBy,
 			@RequestParam(value = "sortDir", defaultValue = ConstantsApp.PAGE_ORDER_DIR_DEFAULT, required = false) String sortDir) {
 		return service.getAllProducts(pageNum, pageSize, sortBy, sortDir);
+	}
+
+	@GetMapping("/no-deleted")
+	public List<ProductDTO> getNotDeletedProducts() {
+		return service.getNotDeletedProducts();
+	}
+
+	@GetMapping("/on-sale")
+	public List<ProductDTO> getOnSaleProducts() {
+		return service.getOnSaleProducts();
 	}
 
 	@GetMapping("/search")
@@ -101,5 +110,4 @@ public class ProductController {
 			@PathVariable(value = "productId", required = true) Long productId) {
 		return service.IsProductEvaluatedByUser(userId, productId);
 	}
-
 }

@@ -15,13 +15,15 @@ import com.store.entitys.User;
 
 @Repository
 public interface ProductsRepository extends JpaRepository<Product, Long> {
+ 
+    public List<Product> findByDeleted(Boolean value);
+
     public List<Product> findByOnSale(Boolean value);
 
-    @Query("SELECT p FROM Product p WHERE p.name LIKE %?1%" +
-            "OR p.description LIKE %?1%")
+    @Query(value = "SELECT p.* FROM products p WHERE p.on_sale=1 AND p.name LIKE '%?1%' OR p.description LIKE '%?1%'", nativeQuery = true)
     public List<Product> findAll(String keyWord);
-
-    @Query("SELECT p FROM Product p JOIN ProductRating pr ON p.id = pr.product WHERE pr.user = ?1 AND pr.stars = 5")
+    
+    @Query(value = "SELECT p.* FROM products p JOIN ratings pr ON p.id = pr.product_id WHERE p.on_sale=1 AND pr.user_id = ?1 AND pr.stars = 5", nativeQuery = true)
     public List<Product> findAll(User user);
 
     @Modifying
