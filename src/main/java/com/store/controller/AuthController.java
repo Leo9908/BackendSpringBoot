@@ -66,7 +66,6 @@ public class AuthController {
 		}
 
 		userDTO.setPass(encoder.encode(userDTO.getPass()));
-
 		serviceUser.createUser(userDTO);
 
 		return new ResponseEntity<>("Successfully registered user", HttpStatus.OK);

@@ -39,7 +39,6 @@ public class ProductServiceImpl implements ProductsService {
 
 	@Override
 	public ProductDTO createProduct(ProductDTO productDTO) {
-
 		Product product = this.mapProductEntity(productDTO);
 		Product newProduct = repo.save(product);
 		ProductDTO productResponse = this.mapProductDTO(newProduct);
@@ -74,8 +73,11 @@ public class ProductServiceImpl implements ProductsService {
 
 	@Override
 	public List<ProductDTO> findAll(String keyWord) {
+		if(keyWord != null){
 		return repo.findAll(keyWord).stream().map(prod -> mapProductDTO(prod))
 				.collect(Collectors.toList());
+		}
+		return null;
 	}
 
 	@Override
@@ -94,9 +96,8 @@ public class ProductServiceImpl implements ProductsService {
 		Product product = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
 
 		product.setName(productDTO.getName());
-		product.setPrecio(productDTO.getPrecio());
+		product.setPrice(productDTO.getPrice());
 		product.setOnSale(productDTO.getOnSale());
-		product.setType(productDTO.getType());
 		product.setDescription(productDTO.getDescription());
 		product.setImgUrl(productDTO.getImgUrl());
 

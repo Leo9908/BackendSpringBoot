@@ -10,9 +10,7 @@ public class ProductDTO {
 	@Size(min = 5, message = "The product name must have at least 5 characters")
 	private String name;
 	@NotNull
-	private int type;
-	@NotNull
-	private double precio;
+	private double price;
 
 	private String description;
 	@NotEmpty
@@ -39,20 +37,12 @@ public class ProductDTO {
 		this.name = name;
 	}
 
-	public int getType() {
-		return type;
+	public double getPrice() {
+		return price;
 	}
 
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	public double getPrecio() {
-		return precio;
-	}
-
-	public void setPrecio(double precio) {
-		this.precio = precio;
+	public void setPrice(double price) {
+		this.price = price;
 	}
 
 	public String getDescription() {
@@ -89,6 +79,18 @@ public class ProductDTO {
 
 	public ProductDTO() {
 		super();
+	}
+
+	public ProductDTO(
+			@NotEmpty @Size(min = 5, message = "The product name must have at least 5 characters") String name,
+			@NotNull double price, String description,
+			@NotEmpty @Size(min = 15, message = "The product URL image name must have at least 15 characters") String imgUrl,
+			@NotNull Boolean onSale) {
+		this.name = name;
+		this.price = price;
+		this.description = description;
+		this.imgUrl = imgUrl;
+		this.onSale = onSale;
 	}
 
 }

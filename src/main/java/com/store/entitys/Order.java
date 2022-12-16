@@ -1,5 +1,6 @@
 package com.store.entitys;
 
+import java.sql.Date;
 import java.util.Collection;
 
 import javax.persistence.Column;
@@ -24,25 +25,22 @@ public class Order {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "secAddress", nullable = true, length = 40)
-    private String secondAddress;
     @Column(name = "secPhone", nullable = true, length = 11)
     private String secondPhone;
     @Column(name = "state", nullable = false)
     private int state;
 
+    @Column(name = "sale_date", nullable = true)
+    private Date date;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", nullable = true)
     private Address address;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
     @ManyToMany
     @JoinTable(name = "products_order", joinColumns = @JoinColumn(name = "order_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
     @JsonManagedReference
-    private Collection<Product> products; 
+    private Collection<Product> products;
 
     public Long getId() {
         return id;
@@ -50,14 +48,6 @@ public class Order {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getSecondAddress() {
-        return secondAddress;
-    }
-
-    public void setSecondAddress(String secondAddress) {
-        this.secondAddress = secondAddress;
     }
 
     public String getSecondPhone() {
@@ -84,14 +74,6 @@ public class Order {
         this.address = address;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public Collection<Product> getProducts() {
         return products;
     }
@@ -100,20 +82,17 @@ public class Order {
         this.products = products;
     }
 
-    public Order(String secondAddress, String secondPhone, int state, Address address, User user,
+    public Order(String secondPhone, int state, Address address, User user,
             Collection<Product> products) {
-        this.secondAddress = secondAddress;
         this.secondPhone = secondPhone;
         this.state = state;
         this.address = address;
-        this.user = user;
         this.products = products;
     }
 
     public Order(int state, Address address, User user) {
         this.state = state;
         this.address = address;
-        this.user = user;
     }
 
     public Order() {

@@ -1,21 +1,13 @@
 package com.store.entitys;
 
-import java.util.Collection;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "reports")
@@ -33,11 +25,6 @@ public class Report {
     private Date endDate;
     @Column(name = "url_excel")
     private String urlExcel;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.REFRESH })
-    @JoinTable(name = "report_sale", joinColumns = @JoinColumn(name = "report_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "sale_id", referencedColumnName = "id"))
-    @JsonManagedReference
-    private Collection<Sale> sales;
 
     public Long getId() {
         return id;
@@ -69,14 +56,6 @@ public class Report {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    public Collection<Sale> getSales() {
-        return sales;
-    }
-
-    public void setSales(Collection<Sale> sales) {
-        this.sales = sales;
     }
 
 }

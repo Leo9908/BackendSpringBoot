@@ -11,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.BDDMockito.given;
@@ -26,6 +28,8 @@ import com.store.uploadingfiles.storage.StorageService;
 
 @AutoConfigureMockMvc
 @SpringBootTest
+@ContextConfiguration
+@WithMockUser(username="admin",roles={"USER","ADMIN"})
 public class FileUploadTests {
 
 	@Autowired

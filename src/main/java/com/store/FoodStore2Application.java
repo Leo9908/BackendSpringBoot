@@ -23,10 +23,14 @@ public class FoodStore2Application {
 		SpringApplication.run(FoodStore2Application.class, args);
 	}
 
+	/**
+	 * Hay que quitar esto para poder hacer algunas las pruebas unitarias, no se
+	 * porqué
+	 */
 	@Bean
 	CommandLineRunner init(StorageService storageService) {
 		return (args) -> {
-			storageService.deleteAll();
+			// storageService.deleteAll();
 			storageService.init();
 		};
 	}

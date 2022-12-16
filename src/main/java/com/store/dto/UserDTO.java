@@ -29,7 +29,7 @@ public class UserDTO {
 
 	private String phone;
 
-	private Collection<Rol> roles;
+	private Collection<RoleDTO> roles;
 
 	public Long getId() {
 		return id;
@@ -87,11 +87,11 @@ public class UserDTO {
 		this.phone = phone;
 	}
 
-	public Collection<Rol> getRoles() {
+	public Collection<RoleDTO> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(Collection<Rol> roles) {
+	public void setRoles(Collection<RoleDTO> roles) {
 		this.roles = roles;
 	}
 
@@ -101,6 +101,21 @@ public class UserDTO {
 
 	public void setToken_pass(String token_pass) {
 		this.token_pass = token_pass;
+	}
+
+	public UserDTO(
+			@NotEmpty(message = "The name must not be empty") @Size(min = 2, message = "Name must contain more than two characters") String name,
+			@NotEmpty(message = "The last name must not be empty") @Size(min = 5, message = "Last name must contain more than five characters") String last_name,
+			@Size(min = 2, message = "User name must contain more than two characters") String user,
+			@NotEmpty(message = "The last name must not be empty") @Email String email,
+			@Size(min = 8, message = "Password must contain more than eight characters") String pass,
+			Collection<RoleDTO> roles) {
+		this.name = name;
+		this.last_name = last_name;
+		this.user = user;
+		this.email = email;
+		this.pass = pass;
+		this.roles = roles;
 	}
 
 	public UserDTO() {

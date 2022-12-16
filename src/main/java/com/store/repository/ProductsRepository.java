@@ -20,7 +20,7 @@ public interface ProductsRepository extends JpaRepository<Product, Long> {
 
     public List<Product> findByOnSale(Boolean value);
 
-    @Query(value = "SELECT p.* FROM products p WHERE p.on_sale=1 AND p.name LIKE '%?1%' OR p.description LIKE '%?1%'", nativeQuery = true)
+    @Query(value = "SELECT p.* FROM [dbo].[products] as p WHERE p.on_sale=1 AND p.name LIKE %?1% OR p.description LIKE %?1%", nativeQuery = true)
     public List<Product> findAll(String keyWord);
     
     @Query(value = "SELECT p.* FROM products p JOIN ratings pr ON p.id = pr.product_id WHERE p.on_sale=1 AND pr.user_id = ?1 AND pr.stars = 5", nativeQuery = true)
@@ -36,6 +36,6 @@ public interface ProductsRepository extends JpaRepository<Product, Long> {
             "(" +
             "SELECT product_id, SUM(amount) AS sa FROM products_order GROUP BY product_id" +
             ")" +
-            "SELECT pr.* FROM products pr JOIN RPA rpa ON pr.id = rpa.product_id WHERE rpa.sa > (SELECT AVG(rpa.sa) FROM RPA)", nativeQuery = true)
+            "SELECT pr.* FROM products pr JOIN RPA rpa ON pr.id = rpa.product_id WHERE rpa.sa >= (SELECT AVG(rpa.sa) FROM RPA)", nativeQuery = true)
     public List<Product> findAllMostSold();
 }

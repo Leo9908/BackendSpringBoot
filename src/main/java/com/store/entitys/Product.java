@@ -24,10 +24,8 @@ public class Product {
 	private Long id;
 	@Column(name = "name", nullable = false, length = 30)
 	private String name;
-	@Column(name = "dish_type", nullable = false, length = 2)
-	private int type;
-	@Column(name = "precio", nullable = false, length = 5)
-	private double precio;
+	@Column(name = "price", nullable = false, length = 5)
+	private double price;
 	@Column(name = "description", nullable = false, length = 130)
 	private String description;
 	@Column(name = "imgUrl", nullable = false)
@@ -35,10 +33,11 @@ public class Product {
 	@Column(name = "onSale", nullable = false)
 	private Boolean onSale;
 
-	//Esta columna es para si el admin desea eliminar un producto
-	//Al tener referencia con la tabla orders da error al eliminar un producto
-	//Y si se elimina un producto se tendrán que eliminar todas las ordenes relacionadas
-	//y por las ordenes es que se saca el registro de ventas.
+	// Esta columna es para si el admin desea eliminar un producto
+	// Al tener referencia con la tabla orders da error al eliminar un producto
+	// Y si se elimina un producto se tendrán que eliminar todas las ordenes
+	// relacionadas
+	// y por las ordenes es que se saca el registro de ventas.
 	@Column(name = "deleted", nullable = true)
 	private Boolean deleted = false;
 
@@ -60,24 +59,16 @@ public class Product {
 		return name;
 	}
 
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public double getPrecio() {
-		return precio;
+	public double getPrice() {
+		return price;
 	}
 
-	public void setPrecio(double precio) {
-		this.precio = precio;
+	public void setPrice(double price) {
+		this.price = price;
 	}
 
 	public String getDescription() {
@@ -111,6 +102,7 @@ public class Product {
 	public void setRatings(Collection<ProductRating> ratings) {
 		this.ratings = ratings;
 	}
+
 	public Boolean getDeleted() {
 		return deleted;
 	}
@@ -118,15 +110,24 @@ public class Product {
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
 	}
-	public Product(String name, int type, double precio, String description, String imgUrl, Boolean onSale,
+
+	public Product(String name, double price, String description, String imgUrl, Boolean onSale,
 			Collection<ProductRating> ratings) {
 		this.name = name;
-		this.type = type;
-		this.precio = precio;
+		this.price = price;
 		this.description = description;
 		this.imgUrl = imgUrl;
 		this.onSale = onSale;
 		this.ratings = ratings;
+	}
+
+	public Product(String name, double price, String description, String imgUrl, Boolean onSale) {
+		this.name = name;
+		this.price = price;
+		this.description = description;
+		this.imgUrl = imgUrl;
+		this.onSale = onSale;
+		this.deleted = deleted;
 	}
 
 	public Product() {

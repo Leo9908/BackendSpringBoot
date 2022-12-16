@@ -21,8 +21,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-@Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = "email"),
-		@UniqueConstraint(columnNames = "username") })
+@Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = "email")})
 public class User {
 
 	@Id
@@ -56,10 +55,6 @@ public class User {
 	@JsonBackReference
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Collection<Address> addresses = new HashSet<>();
-
-	@JsonBackReference
-	@OneToMany(mappedBy = "user")
-	private Collection<Order> orders = new HashSet<>();
 
 	public Long getId() {
 		return id;
@@ -152,14 +147,13 @@ public class User {
 		this.roles = roles;
 	}
 
-	public User(String name, String last_name, String user, String email, String pass, Collection<Rol> roles) {
+	public User(String name, String last_name, String user, String email, String pass) {
 		super();
 		this.name = name;
 		this.last_name = last_name;
 		this.user = user;
 		this.email = email;
 		this.pass = pass;
-		this.roles = roles;
 	}
 
 	public User(String email) {

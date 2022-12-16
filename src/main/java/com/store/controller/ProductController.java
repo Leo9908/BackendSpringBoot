@@ -1,10 +1,13 @@
 package com.store.controller;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.store.dto.ProductDTO;
 import com.store.dto.ProductRatingDTO;
 import com.store.service.ProductsService;
+import com.store.uploadingfiles.storage.StorageService;
 import com.store.utils.ConstantsApp;
 
 @RestController
@@ -29,6 +33,9 @@ public class ProductController {
 
 	@Autowired
 	private ProductsService service;
+
+	@Autowired
+	private StorageService storageService;
 
 	/**
 	 * Listado de productos con paginación
@@ -76,7 +83,7 @@ public class ProductController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
-	public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+	public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) throws IOException {
 		return new ResponseEntity<>(service.createProduct(productDTO), HttpStatus.CREATED);
 	}
 
