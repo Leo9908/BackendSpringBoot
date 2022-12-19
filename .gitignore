@@ -24,4 +24,7 @@ hs_err_pid*
 replay_pid*
 
 #image-server
-/upload-img
+upload-img/
+
+# vscode
+.vscode/    
