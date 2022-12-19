@@ -1,2 +1,2 @@
-# BackendSpringBoot
-Backend del proyecto de Ingenieria de Software
+# FoordStoreApp
+ Proyecto de año Ingenieria de Software
