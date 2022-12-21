@@ -33,6 +33,9 @@ public class Product {
 	@Column(name = "onSale", nullable = false)
 	private Boolean onSale;
 
+	@Column(name = "imgName", nullable = false)
+	private String imgName;
+
 	// Esta columna es para si el admin desea eliminar un producto
 	// Al tener referencia con la tabla orders da error al eliminar un producto
 	// Y si se elimina un producto se tendrán que eliminar todas las ordenes
@@ -111,23 +114,32 @@ public class Product {
 		this.deleted = deleted;
 	}
 
-	public Product(String name, double price, String description, String imgUrl, Boolean onSale,
+	public String getImgName() {
+		return imgName;
+	}
+
+	public void setImgName(String imgName) {
+		this.imgName = imgName;
+	}
+
+	public Product(String name, double price, String description, String imgUrl, String imgName, Boolean onSale,
 			Collection<ProductRating> ratings) {
 		this.name = name;
 		this.price = price;
 		this.description = description;
 		this.imgUrl = imgUrl;
+		this.imgName = imgName;
 		this.onSale = onSale;
 		this.ratings = ratings;
 	}
 
-	public Product(String name, double price, String description, String imgUrl, Boolean onSale) {
+	public Product(String name, double price, String description, String imgUrl, String imgName, Boolean onSale) {
 		this.name = name;
 		this.price = price;
 		this.description = description;
 		this.imgUrl = imgUrl;
+		this.imgName = imgName;
 		this.onSale = onSale;
-		this.deleted = deleted;
 	}
 
 	public Product() {

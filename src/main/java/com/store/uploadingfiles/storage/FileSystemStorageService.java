@@ -16,10 +16,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.store.service.ProductsService;
+
 @Service
 public class FileSystemStorageService implements StorageService {
 
 	private final Path rootLocation;
+
+	@Autowired
+	private ProductsService service;
 
 	@Autowired
 	public FileSystemStorageService(StorageProperties properties) {
@@ -76,7 +81,6 @@ public class FileSystemStorageService implements StorageService {
 			} else {
 				throw new StorageFileNotFoundException(
 						"Could not read file: " + filename);
-
 			}
 		} catch (MalformedURLException e) {
 			throw new StorageFileNotFoundException("Could not read file: " + filename, e);
@@ -89,12 +93,24 @@ public class FileSystemStorageService implements StorageService {
 	}
 
 	@Override
+	public Boolean deleteByName(String name) throws IOException {
+		if (service.getImgNames(name) == 0) {
+			return FileSystemUtils.deleteRecursively(rootLocation.resolve(name).toFile());
+		}
+		return false;
+	}
+
+	@Override
 	public void init() {
 		try {
 			Files.createDirectories(rootLocation);
 		} catch (IOException e) {
 			throw new StorageException("Could not initialize storage", e);
 		}
+	}
+
+	private Boolean existFile(String filename) {
+		return loadAsResource(filename).exists();
 	}
 
 }

@@ -8,11 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +36,7 @@ public class FileUploadController {
 
 	@GetMapping("/")
 	public ResponseEntity<Stream<Path>> listUploadedFiles() throws IOException {
-	    return ResponseEntity.ok(storageService.loadAll());
+		return ResponseEntity.ok(storageService.loadAll());
 	}
 
 	@GetMapping("/files/{filename:.+}")
@@ -54,6 +57,12 @@ public class FileUploadController {
 	@ExceptionHandler(StorageFileNotFoundException.class)
 	public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
 		return ResponseEntity.notFound().build();
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping("/{name}")
+	public ResponseEntity<Boolean> deteteFile(@PathVariable(name = "name") String name) throws IOException {
+		return ResponseEntity.ok(storageService.deleteByName(name));
 	}
 
 }

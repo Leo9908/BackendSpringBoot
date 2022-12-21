@@ -5,11 +5,15 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatcher;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.store.dto.ProductDTO;
 import com.store.dto.ProductRatingDTO;
@@ -38,6 +42,7 @@ public class ProductServiceImpl implements ProductsService {
 	private UsersRepository repository3;
 
 	@Override
+	@Transactional
 	public ProductDTO createProduct(ProductDTO productDTO) {
 		Product product = this.mapProductEntity(productDTO);
 		Product newProduct = repo.save(product);
@@ -47,51 +52,85 @@ public class ProductServiceImpl implements ProductsService {
 	}
 
 	@Override
-	public List<ProductDTO> getAllProducts(int pageNum, int pageSize, String sortBy, String sortDir) {
+	@Transactional(readOnly = true)
+	public List<ProductDTO> getAllProducts(int pageNum, int pageSize, String sortBy, String sortDir, String filter) {
 		Pageable pageable = PageRequest.of(pageNum, pageSize, Direction.fromString(sortDir), sortBy);
-		Page<Product> products = repo.findAll(pageable);
-
+		Product product = new Product();
+		product.setDeleted(false);
+		String[] ignore = new String[8];
+		ignore[0] = "id";
+		ignore[1] = "imgUrl";
+		ignore[2] = "onSale";
+		ignore[3] = "imgName";
+		ignore[4] = "ratings";
+		if (filter.length() == 0 || filter == null) {
+			ignore[5] = "name";
+			ignore[6] = "description";
+			ignore[7] = "price";
+		} else {
+			product.setName(filter);
+			product.setDescription(filter);
+			try {
+				product.setPrice(Integer.parseInt(filter));
+			} catch (Exception e) {
+				System.out.println("Parse error");
+			}
+		}
+		ExampleMatcher matcher = ExampleMatcher.matchingAll()
+				.withMatcher("deleted", new GenericPropertyMatcher().exact())
+				.withMatcher("name", new GenericPropertyMatcher().contains())
+				.withMatcher("price", new GenericPropertyMatcher().startsWith())
+				.withMatcher("description", new GenericPropertyMatcher().contains())
+				.withIgnorePaths(ignore);
+		Page<Product> products = repo.findAll(Example.of(product, matcher), pageable);
 		List<Product> listProducts = products.getContent();
 		return listProducts.stream().map(prod -> mapProductDTO(prod)).collect(Collectors.toList());
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<ProductDTO> getOnSaleProducts() {
 		return repo.findByOnSale(true).stream().map(prod -> mapProductDTO(prod)).collect(Collectors.toList());
 	}
 
 	@Override
-	public List<ProductDTO> getNotDeletedProducts(){
-		return repo.findByDeleted(false).stream().map(prod-> mapProductDTO(prod)).collect(Collectors.toList());
+	@Transactional(readOnly = true)
+	public List<ProductDTO> getNotDeletedProducts() {
+		return repo.findByDeleted(false).stream().map(prod -> mapProductDTO(prod)).collect(Collectors.toList());
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public ProductDTO findById(Long id) {
 		Product product = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
 		return mapProductDTO(product);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<ProductDTO> findAll(String keyWord) {
-		if(keyWord != null){
-		return repo.findAll(keyWord).stream().map(prod -> mapProductDTO(prod))
-				.collect(Collectors.toList());
+		if (keyWord != null) {
+			return repo.findAll(keyWord).stream().map(prod -> mapProductDTO(prod))
+					.collect(Collectors.toList());
 		}
 		return null;
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<ProductDTO> findFavorites(Long userId) {
 		User user = repository3.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 		return repo.findAll(user).stream().map(prod -> mapProductDTO(prod)).collect(Collectors.toList());
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<ProductDTO> findTheMostSold() {
 		return repo.findAllMostSold().stream().map(dto -> mapProductDTO(dto)).collect(Collectors.toList());
 	}
 
 	@Override
+	@Transactional
 	public ProductDTO updateProduct(ProductDTO productDTO, Long id) {
 		Product product = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
 
@@ -100,6 +139,7 @@ public class ProductServiceImpl implements ProductsService {
 		product.setOnSale(productDTO.getOnSale());
 		product.setDescription(productDTO.getDescription());
 		product.setImgUrl(productDTO.getImgUrl());
+		product.setImgName(productDTO.getImgName());
 
 		Product updatedProduct = repo.save(product);
 
@@ -107,6 +147,7 @@ public class ProductServiceImpl implements ProductsService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteProduct(Long id) {
 		Product product = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
 		product.setDeleted(true);
@@ -119,6 +160,7 @@ public class ProductServiceImpl implements ProductsService {
 	 */
 
 	@Override
+	@Transactional
 	public ProductRatingDTO createRating(Long userId, Long productId, ProductRatingDTO ratingDTO) {
 
 		if (IsProductEvaluatedByUser(userId, productId)) {
@@ -140,6 +182,7 @@ public class ProductServiceImpl implements ProductsService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Double getRatingsByProductId(Long productId) {
 		List<ProductRating> ratings = repository.findByProductId(productId);
 		if (ratings.size() > 0) {
@@ -154,9 +197,16 @@ public class ProductServiceImpl implements ProductsService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Boolean IsProductEvaluatedByUser(Long userId, Long productId) {
 		List<ProductRating> ratings = repository.findByUserIdAndProductId(userId, productId);
 		return ratings.size() == 0;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Integer getImgNames(String name) {
+		return repo.findByImgNameAndDeleted(name, false).size();
 	}
 
 	/**

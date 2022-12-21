@@ -28,7 +28,7 @@ public class TestProduct {
     @Order(1)
     public void testSaveProduct() {
         ProductDTO product = new ProductDTO("Pan con lechón", 400, "Delicioso pan con lechón",
-                "https://localhost/api/products-img/files/pexels-pixabay-315755.jpg", true);
+                "https://localhost/api/products-img/files/pexels-pixabay-315755.jpg", "ejemplo", true);
         ProductDTO newProduct = service.createProduct(product);
         assertNotNull(newProduct);
     }

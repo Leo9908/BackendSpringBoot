@@ -16,6 +16,10 @@ public class ProductDTO {
 	@NotEmpty
 	@Size(min = 15, message = "The product URL image name must have at least 15 characters")
 	private String imgUrl;
+    
+	@NotEmpty(message = "El nombre del archivo de imagen no puede estar vacio")
+	private String imgName;
+
 	@NotNull
 	private Boolean onSale;
 
@@ -77,6 +81,14 @@ public class ProductDTO {
 		this.rating = rating;
 	}
 
+	public String getImgName() {
+		return imgName;
+	}
+
+	public void setImgName(String imgName) {
+		this.imgName = imgName;
+	}
+
 	public ProductDTO() {
 		super();
 	}
@@ -85,11 +97,13 @@ public class ProductDTO {
 			@NotEmpty @Size(min = 5, message = "The product name must have at least 5 characters") String name,
 			@NotNull double price, String description,
 			@NotEmpty @Size(min = 15, message = "The product URL image name must have at least 15 characters") String imgUrl,
+			@NotEmpty(message = "El nombre del archivo de imagen no puede estar vacio") String imgName,
 			@NotNull Boolean onSale) {
 		this.name = name;
 		this.price = price;
 		this.description = description;
 		this.imgUrl = imgUrl;
+		this.imgName = imgName;
 		this.onSale = onSale;
 	}
 

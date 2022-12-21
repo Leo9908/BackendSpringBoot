@@ -2,16 +2,18 @@ package com.store.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.store.dto.ProductDTO;
 import com.store.dto.ProductRatingDTO;
 
 public interface ProductsService {
 	public ProductDTO createProduct(ProductDTO productDTO);
 
-	public List<ProductDTO> getAllProducts(int pageNum, int pageSize, String sortBy, String sortDir);
+	public List<ProductDTO> getAllProducts(int pageNum, int pageSize, String sortBy, String sortDir, String filter);
 
 	public List<ProductDTO> getOnSaleProducts();
-	
+
 	public List<ProductDTO> getNotDeletedProducts();
 
 	public ProductDTO findById(Long id);
@@ -31,4 +33,6 @@ public interface ProductsService {
 	public List<ProductDTO> findFavorites(Long userId);
 
 	public List<ProductDTO> findTheMostSold();
+
+	public Integer getImgNames(String name);
 }

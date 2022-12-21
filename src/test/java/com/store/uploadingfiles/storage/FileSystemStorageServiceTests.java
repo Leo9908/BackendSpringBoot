@@ -1,11 +1,14 @@
 package com.store.uploadingfiles.storage;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Random;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.condition.EnabledOnOs;
@@ -61,10 +64,10 @@ public class FileSystemStorageServiceTests {
 	}
 
 	@Test
-	@EnabledOnOs({OS.LINUX})
+	@EnabledOnOs({ OS.LINUX })
 	public void saveAbsolutePathInFilenamePermitted() {
-		//Unix file systems (e.g. ext4) allows backslash '\' in file names.
-		String fileName="\\etc\\passwd";
+		// Unix file systems (e.g. ext4) allows backslash '\' in file names.
+		String fileName = "\\etc\\passwd";
 		service.store(new MockMultipartFile(fileName, fileName,
 				MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes()));
 		assertTrue(Files.exists(
@@ -75,6 +78,17 @@ public class FileSystemStorageServiceTests {
 	public void savePermitted() {
 		service.store(new MockMultipartFile("foo", "bar/../foo.txt",
 				MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes()));
+	}
+
+	@Test
+	public void deleteFile() {
+		try {
+			Boolean response = service.deleteByName("pexels-h-h-775863.jpg");
+			assertEquals(true, response);
+		} catch (Exception e) {
+			System.out.println("Error" + e);
+		}
+
 	}
 
 }

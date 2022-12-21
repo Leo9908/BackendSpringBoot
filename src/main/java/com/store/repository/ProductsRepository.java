@@ -38,4 +38,7 @@ public interface ProductsRepository extends JpaRepository<Product, Long> {
             ")" +
             "SELECT pr.* FROM products pr JOIN RPA rpa ON pr.id = rpa.product_id WHERE rpa.sa >= (SELECT AVG(rpa.sa) FROM RPA)", nativeQuery = true)
     public List<Product> findAllMostSold();
+
+    public List<Product> findByImgNameAndDeleted(String name, Boolean deleted);
+
 }
